@@ -3,7 +3,7 @@ name: Build and Deploy Flutter Web to GitHub Pages
 on:
   push:
     branches:
-      - publish   # Runs only when you push to the 'publish' branch
+      - publish   # only deploy when pushing to 'publish' branch
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.35.1' # ✅ Flutter version with Dart >= 3.5.3
+          flutter-version: '3.35.1'
 
       - name: Install dependencies
         run: flutter pub get
