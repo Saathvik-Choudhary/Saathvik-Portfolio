@@ -1,51 +1,32 @@
-name: saathvik_portfolio
-description: A personal portfolio app built with Flutter
-publish_to: 'none' # Remove this line if you plan to publish to pub.dev
+name: Build and Deploy Flutter Web to GitHub Pages
 
-version: 1.0.0+1
+on:
+  push:
+    branches:
+      - publish   # run only when pushing to branch 'publish'
 
-environment:
-  sdk: ">=3.5.3 <4.0.0"
-  flutter: ">=3.35.1"
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-dependencies:
-  flutter:
-    sdk: flutter
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-  # UI
-  cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
-  font_awesome_flutter: ^10.7.0
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.35.1' # must support Dart >= 3.5.3
 
-  # State management
-  provider: ^6.1.2
+      - name: Install dependencies
+        run: flutter pub get
 
-  # Navigation & Routing
-  go_router: ^14.2.1
+      - name: Build Flutter web
+        run: flutter build web --release
 
-  # Animations
-  flutter_animate: ^4.5.0
-
-  # Misc
-  url_launcher: ^6.3.0
-  http: ^1.2.2
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-
-  flutter_lints: ^4.0.0
-
-flutter:
-  uses-material-design: true
-
-  assets:
-    - assets/images/
-    - assets/icons/
-
-  fonts:
-    - family: Montserrat
-      fonts:
-        - asset: assets/fonts/Montserrat-Regular.ttf
-        - asset: assets/fonts/Montserrat-Bold.ttf
-          weight: 700
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          publish_branch: gh-pages
