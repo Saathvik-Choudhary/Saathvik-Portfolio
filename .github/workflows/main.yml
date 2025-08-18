@@ -18,7 +18,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0' # or the version your project uses
+          flutter-version: '3.35.1' # ✅ match your pubspec.yaml
           channel: stable
 
       - name: Install dependencies
