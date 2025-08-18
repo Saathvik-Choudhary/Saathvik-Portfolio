@@ -1,0 +1,39 @@
+name: Deploy Flutter Web App
+
+on:
+  push:
+    branches:
+      - main   # Change if your default branch is 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0' # replace with your version
+          channel: 'stable'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Build Flutter Web
+      - name: Build Web
+        run: flutter build web --release
+
+      # Deploy ONLY build files to gh-pages (force clean branch)
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./build/web
+          force_orphan: true   # ensures branch has ONLY build files
